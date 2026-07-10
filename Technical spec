@@ -1,0 +1,2229 @@
+# TECHNICAL SPECIFICATION
+## Website Doanh Nghiệp Cửa Chớp Nhôm
+**Phiên bản:** 1.0.0  
+**Ngày tạo:** 2026-07-10  
+**Tác giả:** Senior Software Architect & Product Designer  
+**Trạng thái:** Draft → Ready for AI Coding Agent
+
+---
+
+## MỤC LỤC
+
+1. [Product Vision](#1-product-vision)
+2. [User Personas](#2-user-personas)
+3. [User Flow](#3-user-flow)
+4. [Sitemap](#4-sitemap)
+5. [Information Architecture](#5-information-architecture)
+6. [Database Schema](#6-database-schema)
+7. [ER Diagram](#7-er-diagram-text)
+8. [API Design](#8-api-design)
+9. [Route Structure](#9-route-structure-nextjs-app-router)
+10. [Component Structure](#10-component-structure)
+11. [UI Design System](#11-ui-design-system)
+12. [Color Palette](#12-color-palette)
+13. [Typography](#13-typography)
+14. [Spacing Rules](#14-spacing-rules)
+15. [Responsive Rules](#15-responsive-rules)
+16. [SEO Strategy](#16-seo-strategy)
+17. [Metadata Strategy](#17-metadata-strategy)
+18. [Schema.org Strategy](#18-schemaorg-strategy)
+19. [AI Chat Flow](#19-ai-chat-flow)
+20. [Lead Collection Flow](#20-lead-collection-flow)
+21. [Admin Dashboard Features](#21-admin-dashboard-features)
+22. [Folder Structure](#22-folder-structure)
+23. [Coding Convention](#23-coding-convention)
+24. [Naming Convention](#24-naming-convention)
+25. [Security](#25-security)
+26. [Performance Optimization](#26-performance-optimization)
+27. [Accessibility (WCAG)](#27-accessibility-wcag)
+28. [Deployment Strategy](#28-deployment-strategy)
+29. [Future Scalability](#29-future-scalability)
+
+---
+
+## 1. PRODUCT VISION
+
+### 1.1 Tổng quan
+
+Website doanh nghiệp chuyên cung cấp **cửa chớp nhôm** cao cấp — một sản phẩm xây dựng nội/ngoại thất kết hợp giữa tính thẩm mỹ công nghiệp và công năng thực tiễn. Sản phẩm phục vụ phân khúc khách hàng B2C cao cấp và B2B (nhà thầu, kiến trúc sư, chủ đầu tư dự án).
+
+### 1.2 Mục tiêu kinh doanh
+
+| Mục tiêu | Chỉ số đo lường | Kỳ vọng (6 tháng) |
+|---|---|---|
+| Thu hút khách hàng tiềm năng | Số lead/tháng | ≥ 200 lead |
+| Tăng nhận diện thương hiệu | Organic traffic | ≥ 5,000 lượt/tháng |
+| Rút ngắn chu kỳ bán hàng | Thời gian từ lead đến báo giá | ≤ 24 giờ |
+| Tự động hóa tư vấn sơ bộ | Tỉ lệ chat giải quyết không cần nhân viên | ≥ 60% |
+| Quản lý nội dung linh hoạt | Thời gian đăng bài/sản phẩm mới | ≤ 10 phút |
+
+### 1.3 Tuyên bố định vị
+
+> "Cửa chớp nhôm cao cấp — Nơi kỹ thuật gặp thẩm mỹ. Tư vấn thông minh, thi công tận tâm."
+
+Website không chỉ là tờ brochure số mà là một **công cụ bán hàng tự động**: AI tư vấn 24/7, thu thập lead có cấu trúc, và trang bị đầy đủ thông tin để rút ngắn quyết định mua.
+
+### 1.4 Nguyên tắc thiết kế cốt lõi
+
+- **Tin cậy trước, bán sau:** Nội dung chứng minh năng lực (dự án thi công, chứng chỉ, đánh giá) xuất hiện trước CTA.
+- **Tốc độ là tính năng:** Core Web Vitals đạt "Good" trên mọi trang.
+- **SEO-first từ bước đầu:** Kiến trúc URL, schema markup, và nội dung được thiết kế cho máy tìm kiếm ngay từ đầu.
+- **Mobile-first thực sự:** Layout thiết kế từ 320px lên, không phải từ desktop xuống.
+- **Admin không cần dev:** Mọi nội dung đều chỉnh được qua dashboard, không cần deploy lại.
+
+---
+
+## 2. USER PERSONAS
+
+### Persona 1: Chủ nhà đang xây / sửa nhà
+
+**Tên đại diện:** Anh Minh, 38 tuổi, TP.HCM  
+**Nghề nghiệp:** Kỹ sư phần mềm, thu nhập ổn định  
+**Ngữ cảnh:** Đang hoàn thiện căn hộ 90m², muốn lắp cửa chớp nhôm cho ban công và phòng khách  
+
+**Mục tiêu:**
+- Tìm sản phẩm đẹp, bền, phù hợp phong cách hiện đại
+- Biết giá cả trước khi liên hệ
+- Tin tưởng nhà cung cấp qua portfolio và đánh giá thực tế
+
+**Nỗi đau:**
+- Không biết loại nhôm nào phù hợp với điều kiện thời tiết
+- Lo ngại về chất lượng thi công và hậu mãi
+- Mất nhiều thời gian liên hệ nhiều nơi để so sánh giá
+
+**Hành vi trên web:**
+- Dùng điện thoại là chính
+- Xem ảnh thực tế dự án đã thi công
+- Chat để hỏi nhanh trước khi gọi điện
+
+---
+
+### Persona 2: Kiến trúc sư / Nhà thầu nội thất
+
+**Tên đại diện:** Chị Lan, 32 tuổi, Hà Nội  
+**Nghề nghiệp:** Kiến trúc sư tự do, thường xuyên specify vật liệu cho khách hàng  
+
+**Mục tiêu:**
+- Tải catalog kỹ thuật, bảng màu, thông số vật liệu
+- Nhận báo giá sỉ / hợp tác lâu dài
+- Theo dõi tiến độ nhiều dự án cùng lúc
+
+**Nỗi đau:**
+- Thiếu thông tin kỹ thuật chi tiết (profile nhôm, độ dày, hệ số chịu lực)
+- Quy trình báo giá lâu, không chuẩn hóa
+- Khó theo dõi đơn hàng nhiều công trình
+
+**Hành vi trên web:**
+- Dùng desktop nhiều hơn
+- Đọc blog kỹ thuật và case study
+- Điền form báo giá chi tiết
+
+---
+
+### Persona 3: Chủ đầu tư dự án
+
+**Tên đại diện:** Ông Tuấn, 50 tuổi, Bình Dương  
+**Nghề nghiệp:** Chủ doanh nghiệp, đang xây dựng tòa nhà văn phòng 8 tầng  
+
+**Mục tiêu:**
+- Tìm đối tác cung cấp số lượng lớn, đảm bảo tiến độ
+- Xem hồ sơ năng lực và dự án tương tự đã thực hiện
+- Liên hệ trực tiếp với bộ phận dự án
+
+**Nỗi đau:**
+- Rủi ro nhà cung cấp không đảm bảo số lượng và chất lượng
+- Quy trình xác nhận năng lực phức tạp
+
+**Hành vi trên web:**
+- Xem trang "Dự án đã thi công" kỹ nhất
+- Tìm thông tin doanh nghiệp, giấy phép, chứng nhận
+- Yêu cầu gặp trực tiếp sau khi đã tìm hiểu online
+
+---
+
+## 3. USER FLOW
+
+### Flow 1: Khách hàng cá nhân — Tư vấn → Lead
+
+```
+[Tìm kiếm Google: "cửa chớp nhôm giá rẻ HCM"]
+        ↓
+[Landing Page / Trang danh mục]
+        ↓
+[Xem sản phẩm → Trang chi tiết sản phẩm]
+        ↓
+        ├── [Mở AI Chat → Hỏi kích thước, giá, màu sắc]
+        │         ↓
+        │   [AI trả lời → Gợi ý điền form báo giá]
+        │         ↓
+        │   [Form báo giá có thông tin sơ bộ từ chat]
+        │         ↓
+        │   [Lead được tạo → Admin nhận thông báo]
+        │
+        └── [Nhấn "Yêu cầu báo giá" trực tiếp]
+                  ↓
+          [Form báo giá đầy đủ]
+                  ↓
+          [Lead được tạo → Email xác nhận → Admin follow-up]
+```
+
+### Flow 2: Kiến trúc sư — Nghiên cứu → Hợp tác
+
+```
+[Blog kỹ thuật / Google tìm kiếm chuyên sâu]
+        ↓
+[Đọc bài viết → Link sang trang sản phẩm liên quan]
+        ↓
+[Xem catalog / thông số kỹ thuật]
+        ↓
+[Trang "Báo giá" → Chọn loại khách hàng: Hợp tác]
+        ↓
+[Form báo giá nâng cao (ghi rõ dự án, số lượng, timeline)]
+        ↓
+[Lead B2B được đánh dấu → Sales xử lý ưu tiên]
+```
+
+### Flow 3: Admin — Quản lý hàng ngày
+
+```
+[Đăng nhập Admin Dashboard]
+        ↓
+        ├── [Xem Lead mới → Cập nhật trạng thái → Ghi chú]
+        ├── [Thêm / Sửa sản phẩm → Upload ảnh → Publish]
+        ├── [Viết bài blog → SEO fields → Schedule / Publish]
+        ├── [Xem dự án thi công → Cập nhật portfolio]
+        └── [Thống kê: Lead theo ngày, tỉ lệ chuyển đổi]
+```
+
+---
+
+## 4. SITEMAP
+
+```
+/ (Home)
+├── /san-pham (Danh mục sản phẩm)
+│   ├── /san-pham/cua-chop-nhom-ngang
+│   ├── /san-pham/cua-chop-nhom-doc
+│   ├── /san-pham/cua-chop-nhom-co-dinh
+│   ├── /san-pham/cua-chop-nhom-dieu-chinh
+│   └── /san-pham/[slug] (Chi tiết sản phẩm)
+│
+├── /du-an (Dự án đã thi công)
+│   └── /du-an/[slug] (Chi tiết dự án)
+│
+├── /blog (Bài viết / Tin tức)
+│   ├── /blog/[category] (Danh mục bài viết)
+│   └── /blog/[slug] (Chi tiết bài viết)
+│
+├── /bao-gia (Yêu cầu báo giá)
+├── /lien-he (Liên hệ)
+├── /ve-chung-toi (Giới thiệu)
+│
+└── /admin (Admin Dashboard — protected)
+    ├── /admin/dashboard
+    ├── /admin/san-pham
+    │   ├── /admin/san-pham/them-moi
+    │   └── /admin/san-pham/[id]/chinh-sua
+    ├── /admin/bai-viet
+    │   ├── /admin/bai-viet/them-moi
+    │   └── /admin/bai-viet/[id]/chinh-sua
+    ├── /admin/du-an
+    │   ├── /admin/du-an/them-moi
+    │   └── /admin/du-an/[id]/chinh-sua
+    ├── /admin/leads
+    │   └── /admin/leads/[id]
+    ├── /admin/media
+    └── /admin/cai-dat
+        ├── /admin/cai-dat/nguoi-dung
+        └── /admin/cai-dat/he-thong
+```
+
+---
+
+## 5. INFORMATION ARCHITECTURE
+
+### 5.1 Phân cấp thông tin trang chủ
+
+```
+HEADER
+  Logo | Navigation chính | CTA "Báo giá ngay" | Hotline
+
+HERO SECTION
+  Headline chính | Sub-headline | 2 CTA (Xem sản phẩm / Báo giá)
+  Background: ảnh dự án nổi bật full-width
+
+TRUST BAR
+  Số năm kinh nghiệm | Dự án đã hoàn thành | Khách hàng hài lòng | Bảo hành năm
+
+DANH MỤC SẢN PHẨM NỔI BẬT
+  Grid 4 sản phẩm nổi bật → Link "Xem tất cả"
+
+DỰ ÁN ĐÃ THI CÔNG
+  Masonry/carousel 6 dự án → Link "Xem tất cả dự án"
+
+TẠI SAO CHỌN CHÚNG TÔI
+  4 điểm mạnh: Chất lượng | Kỹ thuật | Hậu mãi | Tư vấn
+
+ĐÁNH GIÁ KHÁCH HÀNG
+  Testimonials carousel (tên, ảnh, nội dung)
+
+BLOG NỔI BẬT
+  3 bài mới nhất
+
+FORM BÁO GIÁ NHANH
+  Inline: Họ tên | SĐT | Loại sản phẩm | Ghi chú | Submit
+
+FOOTER
+  Logo | Thông tin công ty | Menu nhanh | Mạng xã hội | Giấy phép kinh doanh
+```
+
+### 5.2 Trang danh mục sản phẩm
+
+```
+BREADCRUMB
+FILTER SIDEBAR (desktop) / FILTER SHEET (mobile)
+  Loại sản phẩm | Màu sắc | Vật liệu | Khoảng giá
+PRODUCT GRID
+  Card: Ảnh | Tên | Giá từ | Badge (Mới / Bán chạy) | Nút "Xem chi tiết"
+PAGINATION / INFINITE SCROLL
+```
+
+### 5.3 Trang chi tiết sản phẩm
+
+```
+BREADCRUMB
+IMAGE GALLERY (main + thumbnails)
+PRODUCT INFO
+  Tên sản phẩm | SKU | Mô tả ngắn | Giá | Màu sắc có sẵn
+  Thông số kỹ thuật (table)
+  Tải về: Catalog PDF / Thông số kỹ thuật
+TABS: Mô tả chi tiết | Thông số | Hướng dẫn lắp đặt | Đánh giá
+RELATED PRODUCTS
+FLOATING CTA: "Yêu cầu báo giá" (sticky bottom on mobile)
+```
+
+---
+
+## 6. DATABASE SCHEMA
+
+> **Lý do chọn PostgreSQL + Supabase:** Hỗ trợ full-text search tiếng Việt qua `pg_trgm`, Row Level Security (RLS) cho phân quyền, realtime subscriptions cho chat, và tích hợp tốt với Next.js qua `@supabase/ssr`.
+
+### 6.1 Table: `profiles`
+Mở rộng từ `auth.users` của Supabase Auth.
+
+```sql
+profiles (
+  id              UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  full_name       TEXT,
+  avatar_url      TEXT,
+  role            TEXT NOT NULL DEFAULT 'viewer'
+                  CHECK (role IN ('super_admin', 'admin', 'editor', 'viewer')),
+  phone           TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.2 Table: `product_categories`
+
+```sql
+product_categories (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name            TEXT NOT NULL,
+  slug            TEXT NOT NULL UNIQUE,
+  description     TEXT,
+  image_url       TEXT,
+  parent_id       UUID REFERENCES product_categories(id),
+  sort_order      INTEGER DEFAULT 0,
+  is_active       BOOLEAN NOT NULL DEFAULT TRUE,
+  meta_title      TEXT,
+  meta_description TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.3 Table: `products`
+
+```sql
+products (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category_id     UUID NOT NULL REFERENCES product_categories(id),
+  name            TEXT NOT NULL,
+  slug            TEXT NOT NULL UNIQUE,
+  sku             TEXT UNIQUE,
+  short_description TEXT,
+  description     TEXT,                    -- Rich text (HTML)
+  specifications  JSONB,                   -- { "Độ dày": "1.2mm", "Chiều rộng": "80mm" }
+  price_from      NUMERIC(15,2),           -- Giá từ (VND)
+  price_to        NUMERIC(15,2),           -- Giá đến (VND)
+  images          JSONB NOT NULL DEFAULT '[]',  -- Array of { url, alt, is_primary }
+  catalog_url     TEXT,                    -- Link PDF catalog
+  status          TEXT NOT NULL DEFAULT 'draft'
+                  CHECK (status IN ('draft', 'published', 'archived')),
+  is_featured     BOOLEAN NOT NULL DEFAULT FALSE,
+  sort_order      INTEGER DEFAULT 0,
+  view_count      INTEGER NOT NULL DEFAULT 0,
+  meta_title      TEXT,
+  meta_description TEXT,
+  meta_keywords   TEXT,
+  og_image_url    TEXT,
+  search_vector   TSVECTOR,                -- Cho full-text search
+  created_by      UUID REFERENCES profiles(id),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.4 Table: `product_colors`
+
+```sql
+product_colors (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  product_id  UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  name        TEXT NOT NULL,              -- "Trắng sứ", "Xám than"
+  hex_code    TEXT,                       -- "#F5F5F5"
+  image_url   TEXT,
+  sort_order  INTEGER DEFAULT 0
+)
+```
+
+### 6.5 Table: `projects` (Dự án thi công)
+
+```sql
+projects (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title           TEXT NOT NULL,
+  slug            TEXT NOT NULL UNIQUE,
+  client_name     TEXT,
+  location        TEXT,
+  area            TEXT,                   -- "350m²"
+  project_type    TEXT,                   -- "Nhà ở", "Văn phòng", "Biệt thự"
+  completion_date DATE,
+  description     TEXT,
+  images          JSONB NOT NULL DEFAULT '[]',
+  cover_image_url TEXT,
+  is_featured     BOOLEAN NOT NULL DEFAULT FALSE,
+  status          TEXT NOT NULL DEFAULT 'draft'
+                  CHECK (status IN ('draft', 'published', 'archived')),
+  meta_title      TEXT,
+  meta_description TEXT,
+  created_by      UUID REFERENCES profiles(id),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.6 Table: `blog_categories`
+
+```sql
+blog_categories (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  slug        TEXT NOT NULL UNIQUE,
+  description TEXT,
+  sort_order  INTEGER DEFAULT 0,
+  is_active   BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.7 Table: `blog_posts`
+
+```sql
+blog_posts (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category_id     UUID REFERENCES blog_categories(id),
+  author_id       UUID REFERENCES profiles(id),
+  title           TEXT NOT NULL,
+  slug            TEXT NOT NULL UNIQUE,
+  excerpt         TEXT,
+  content         TEXT,                   -- Rich text (HTML/MDX)
+  cover_image_url TEXT,
+  cover_image_alt TEXT,
+  status          TEXT NOT NULL DEFAULT 'draft'
+                  CHECK (status IN ('draft', 'published', 'scheduled', 'archived')),
+  published_at    TIMESTAMPTZ,
+  scheduled_at    TIMESTAMPTZ,
+  view_count      INTEGER NOT NULL DEFAULT 0,
+  read_time_min   INTEGER,               -- Ước tính thời gian đọc
+  tags            TEXT[] DEFAULT '{}',
+  meta_title      TEXT,
+  meta_description TEXT,
+  meta_keywords   TEXT,
+  og_image_url    TEXT,
+  canonical_url   TEXT,
+  search_vector   TSVECTOR,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.8 Table: `leads`
+
+```sql
+leads (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  full_name       TEXT NOT NULL,
+  phone           TEXT NOT NULL,
+  email           TEXT,
+  company         TEXT,
+  lead_type       TEXT NOT NULL DEFAULT 'individual'
+                  CHECK (lead_type IN ('individual', 'business', 'architect')),
+  source          TEXT,                   -- "homepage_form", "chat", "product_page", "blog"
+  source_url      TEXT,
+  product_interest UUID REFERENCES products(id),
+  project_description TEXT,
+  budget_range    TEXT,
+  area_size       TEXT,
+  location        TEXT,
+  status          TEXT NOT NULL DEFAULT 'new'
+                  CHECK (status IN ('new', 'contacted', 'qualified', 'proposal_sent',
+                                    'negotiating', 'won', 'lost', 'spam')),
+  priority        TEXT NOT NULL DEFAULT 'normal'
+                  CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+  assigned_to     UUID REFERENCES profiles(id),
+  notes           TEXT,
+  chat_session_id TEXT,                   -- Liên kết với chat session
+  utm_source      TEXT,
+  utm_medium      TEXT,
+  utm_campaign    TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.9 Table: `lead_activities`
+
+```sql
+lead_activities (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  lead_id     UUID NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+  user_id     UUID REFERENCES profiles(id),
+  type        TEXT NOT NULL
+              CHECK (type IN ('note', 'call', 'email', 'meeting', 'status_change', 'assignment')),
+  content     TEXT,
+  metadata    JSONB,                      -- { "old_status": "new", "new_status": "contacted" }
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.10 Table: `chat_sessions`
+
+```sql
+chat_sessions (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_token   TEXT NOT NULL UNIQUE,   -- UUID anonymous session
+  visitor_id      TEXT,                   -- Fingerprint hoặc cookie ID
+  messages        JSONB NOT NULL DEFAULT '[]',  -- Array of { role, content, timestamp }
+  lead_id         UUID REFERENCES leads(id),    -- Liên kết nếu visitor đã submit lead
+  page_url        TEXT,
+  device_type     TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.11 Table: `media_files`
+
+```sql
+media_files (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  file_name       TEXT NOT NULL,
+  file_path       TEXT NOT NULL,          -- Path trong Supabase Storage
+  file_url        TEXT NOT NULL,          -- Public URL
+  file_type       TEXT NOT NULL,          -- "image/jpeg", "application/pdf"
+  file_size       INTEGER,               -- Bytes
+  width           INTEGER,               -- Pixels (cho ảnh)
+  height          INTEGER,
+  alt_text        TEXT,
+  folder          TEXT,                   -- "products", "projects", "blog", "general"
+  uploaded_by     UUID REFERENCES profiles(id),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+### 6.12 Table: `site_settings`
+
+```sql
+site_settings (
+  key     TEXT PRIMARY KEY,
+  value   JSONB NOT NULL,
+  label   TEXT,
+  updated_by UUID REFERENCES profiles(id),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+-- Ví dụ key/value:
+-- "company_info": { "name": "...", "phone": "...", "address": "...", "email": "..." }
+-- "homepage_hero": { "title": "...", "subtitle": "...", "image_url": "..." }
+-- "social_links": { "facebook": "...", "zalo": "...", "youtube": "..." }
+-- "seo_defaults": { "title_template": "...", "default_og_image": "..." }
+```
+
+### 6.13 Table: `testimonials`
+
+```sql
+testimonials (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  title       TEXT,                       -- "Chủ nhà - TP.HCM"
+  avatar_url  TEXT,
+  content     TEXT NOT NULL,
+  rating      SMALLINT CHECK (rating BETWEEN 1 AND 5),
+  project_id  UUID REFERENCES projects(id),
+  is_active   BOOLEAN NOT NULL DEFAULT TRUE,
+  sort_order  INTEGER DEFAULT 0,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)
+```
+
+---
+
+## 7. ER DIAGRAM (TEXT)
+
+```
+auth.users (Supabase built-in)
+    │ 1
+    │ ─── extends ───
+    ▼ 1
+profiles
+    │ 1
+    │ ─── created_by ─── M ─── products
+    │ 1                              │ 1
+    │                                │ ─── M ─── product_colors
+    │ 1                              │ 1
+    │ ─── assigned_to ─── M ─── leads
+    │                              │ M
+    │                              │
+    │ 1                   ┌────────┘
+    │ ─── user_id ─── M ──▼ lead_activities
+    │
+    │ 1
+    │ ─── uploaded_by ─── M ─── media_files
+    │
+    │ 1
+    │ ─── author_id ─── M ─── blog_posts
+    │                              │ M
+    │                              │ ─── belongs_to ─── 1 ─── blog_categories
+    │
+    │ 1
+    │ ─── created_by ─── M ─── projects
+                                  │ M
+                                  │ ─── referenced_by ─── M ─── testimonials
+
+products M ──────── belongs_to ──── 1 ─── product_categories
+                                                │ 1
+                                                └── self_ref (parent_id)
+
+leads 1 ──── linked_to ──── 1 ─── chat_sessions
+leads M ──── interest_in ──── 1 ─── products
+```
+
+---
+
+## 8. API DESIGN
+
+> **Lý do dùng Next.js Route Handlers:** Giữ codebase monorepo, tận dụng Server Actions cho form mutations, dùng Route Handlers chỉ khi cần RESTful endpoint (AI chat, public API). Điều này giảm boilerplate và tận dụng ISR/SSG của Next.js.
+
+### 8.1 Server Actions (Mutations)
+
+| Action | File | Mô tả |
+|---|---|---|
+| `createLead` | `app/actions/leads.ts` | Submit form báo giá / liên hệ |
+| `createProduct` | `app/actions/products.ts` | Thêm sản phẩm mới |
+| `updateProduct` | `app/actions/products.ts` | Cập nhật sản phẩm |
+| `deleteProduct` | `app/actions/products.ts` | Xóa sản phẩm (soft delete) |
+| `createPost` | `app/actions/posts.ts` | Tạo bài blog |
+| `updatePost` | `app/actions/posts.ts` | Cập nhật bài blog |
+| `createProject` | `app/actions/projects.ts` | Tạo dự án thi công |
+| `updateLeadStatus` | `app/actions/leads.ts` | Cập nhật trạng thái lead |
+| `uploadMedia` | `app/actions/media.ts` | Upload file lên Supabase Storage |
+| `updateSiteSettings` | `app/actions/settings.ts` | Cập nhật cài đặt hệ thống |
+
+### 8.2 Route Handlers (REST API)
+
+#### AI Chat
+
+```
+POST /api/chat
+Body: {
+  messages: Array<{ role: "user" | "assistant", content: string }>,
+  sessionId: string,
+  pageContext?: string
+}
+Response: Stream (text/event-stream)
+```
+
+#### Public API (cho external integrations)
+
+```
+GET  /api/products              → Danh sách sản phẩm published
+GET  /api/products/[slug]       → Chi tiết sản phẩm
+GET  /api/blog                  → Danh sách bài viết published
+GET  /api/blog/[slug]           → Chi tiết bài viết
+GET  /api/projects              → Danh sách dự án published
+POST /api/leads                 → Tạo lead (webhook external)
+GET  /api/sitemap               → Dynamic sitemap entries
+```
+
+#### Admin API (protected, role-based)
+
+```
+GET  /api/admin/leads           → Danh sách leads (filter, sort, paginate)
+GET  /api/admin/leads/[id]      → Chi tiết lead
+PATCH /api/admin/leads/[id]     → Cập nhật lead
+GET  /api/admin/stats           → Dashboard statistics
+POST /api/admin/media/upload    → Upload media
+DELETE /api/admin/media/[id]    → Xóa media
+```
+
+### 8.3 API Response Format
+
+Mọi API response tuân theo format chuẩn:
+
+```typescript
+// Thành công
+{
+  success: true,
+  data: T,
+  meta?: {
+    total: number,
+    page: number,
+    limit: number,
+    totalPages: number
+  }
+}
+
+// Lỗi
+{
+  success: false,
+  error: {
+    code: string,       // "VALIDATION_ERROR", "NOT_FOUND", "UNAUTHORIZED"
+    message: string,    // Message cho developer
+    details?: unknown   // Chi tiết lỗi validation
+  }
+}
+```
+
+### 8.4 Query Parameters chuẩn hóa
+
+```
+?page=1           → Trang (mặc định: 1)
+?limit=12         → Số item/trang (mặc định: 12, max: 100)
+?sort=created_at  → Trường sắp xếp
+?order=desc       → asc / desc
+?search=keyword   → Full-text search
+?status=published → Filter theo status
+?category=slug    → Filter theo danh mục
+?featured=true    → Chỉ item nổi bật
+```
+
+---
+
+## 9. ROUTE STRUCTURE (NEXT.JS APP ROUTER)
+
+### 9.1 Cấu trúc thư mục `app/`
+
+```
+app/
+├── (marketing)/                    → Route group: public pages (có layout riêng)
+│   ├── layout.tsx                  → Header + Footer cho public site
+│   ├── page.tsx                    → Trang chủ "/"
+│   ├── ve-chung-toi/
+│   │   └── page.tsx
+│   ├── lien-he/
+│   │   └── page.tsx
+│   ├── bao-gia/
+│   │   └── page.tsx
+│   ├── san-pham/
+│   │   ├── page.tsx                → Danh mục sản phẩm
+│   │   ├── [slug]/
+│   │   │   └── page.tsx            → Chi tiết sản phẩm
+│   │   └── loading.tsx
+│   ├── du-an/
+│   │   ├── page.tsx
+│   │   └── [slug]/
+│   │       └── page.tsx
+│   └── blog/
+│       ├── page.tsx
+│       ├── [category]/
+│       │   └── page.tsx
+│       └── [slug]/
+│           └── page.tsx
+│
+├── (admin)/                        → Route group: admin dashboard (layout riêng)
+│   ├── layout.tsx                  → Sidebar + Topbar layout
+│   ├── admin/
+│   │   ├── page.tsx                → Redirect to /admin/dashboard
+│   │   ├── dashboard/
+│   │   │   └── page.tsx
+│   │   ├── san-pham/
+│   │   │   ├── page.tsx            → Danh sách sản phẩm
+│   │   │   ├── them-moi/
+│   │   │   │   └── page.tsx
+│   │   │   └── [id]/
+│   │   │       └── chinh-sua/
+│   │   │           └── page.tsx
+│   │   ├── bai-viet/
+│   │   │   ├── page.tsx
+│   │   │   ├── them-moi/
+│   │   │   │   └── page.tsx
+│   │   │   └── [id]/
+│   │   │       └── chinh-sua/
+│   │   │           └── page.tsx
+│   │   ├── du-an/
+│   │   │   ├── page.tsx
+│   │   │   ├── them-moi/
+│   │   │   │   └── page.tsx
+│   │   │   └── [id]/
+│   │   │       └── chinh-sua/
+│   │   │           └── page.tsx
+│   │   ├── leads/
+│   │   │   ├── page.tsx
+│   │   │   └── [id]/
+│   │   │       └── page.tsx
+│   │   ├── media/
+│   │   │   └── page.tsx
+│   │   └── cai-dat/
+│   │       ├── page.tsx
+│   │       ├── nguoi-dung/
+│   │       │   └── page.tsx
+│   │       └── he-thong/
+│   │           └── page.tsx
+│
+├── api/
+│   ├── chat/
+│   │   └── route.ts               → AI Chat API (streaming)
+│   ├── leads/
+│   │   └── route.ts               → Public lead creation
+│   ├── products/
+│   │   ├── route.ts
+│   │   └── [slug]/
+│   │       └── route.ts
+│   ├── admin/
+│   │   ├── leads/
+│   │   │   ├── route.ts
+│   │   │   └── [id]/
+│   │   │       └── route.ts
+│   │   ├── stats/
+│   │   │   └── route.ts
+│   │   └── media/
+│   │       ├── upload/
+│   │       │   └── route.ts
+│   │       └── [id]/
+│   │           └── route.ts
+│   └── revalidate/
+│       └── route.ts               → Webhook revalidation
+│
+├── sitemap.ts                     → Dynamic sitemap
+├── robots.ts                      → robots.txt
+├── manifest.ts                    → Web app manifest
+├── not-found.tsx
+├── error.tsx
+├── global-error.tsx
+└── layout.tsx                     → Root layout (fonts, providers)
+```
+
+### 9.2 Chiến lược Rendering
+
+| Route | Strategy | Lý do |
+|---|---|---|
+| `/` (Home) | ISR (revalidate: 3600s) | Nội dung thay đổi không thường xuyên, cần SEO |
+| `/san-pham` | ISR (revalidate: 1800s) | Cần filter theo query params |
+| `/san-pham/[slug]` | ISR (revalidate: 3600s) + `generateStaticParams` | SEO quan trọng, nội dung ổn định |
+| `/blog/[slug]` | ISR (revalidate: 3600s) + `generateStaticParams` | SEO rất quan trọng |
+| `/du-an/[slug]` | ISR (revalidate: 7200s) | Ít thay đổi |
+| `/bao-gia` | Static | Form đơn giản |
+| `/admin/*` | Dynamic (CSR) | Cần auth check, data real-time |
+| `/api/chat` | Streaming | AI response |
+
+---
+
+## 10. COMPONENT STRUCTURE
+
+### 10.1 Phân loại Component
+
+Áp dụng **Atomic Design** biến thể, chia thành 4 lớp:
+
+```
+components/
+├── ui/                    → shadcn/ui components (generated, đừng tùy chỉnh trực tiếp)
+│   └── [button, input, dialog, ...]
+│
+├── primitives/            → Custom primitive components (tái sử dụng cao, không có business logic)
+│   ├── Logo.tsx
+│   ├── OptimizedImage.tsx
+│   ├── RichText.tsx       → Render HTML an toàn với sanitization
+│   ├── VideoEmbed.tsx
+│   └── StarRating.tsx
+│
+├── common/                → Shared UI patterns (có thể có business logic nhẹ)
+│   ├── Navigation/
+│   │   ├── Header.tsx
+│   │   ├── MobileMenu.tsx
+│   │   └── Breadcrumb.tsx
+│   ├── Footer/
+│   │   └── Footer.tsx
+│   ├── SEO/
+│   │   └── JsonLd.tsx     → Schema.org structured data injection
+│   ├── Forms/
+│   │   ├── LeadForm.tsx
+│   │   ├── QuoteForm.tsx
+│   │   └── ContactForm.tsx
+│   ├── Chat/
+│   │   ├── ChatWidget.tsx      → Container widget
+│   │   ├── ChatMessages.tsx    → Message list
+│   │   ├── ChatInput.tsx       → Input + send
+│   │   └── ChatBubble.tsx      → Individual message bubble
+│   ├── Media/
+│   │   ├── ImageGallery.tsx    → Product gallery với lightbox
+│   │   ├── MediaUploader.tsx   → Admin upload component
+│   │   └── MediaGrid.tsx       → Admin media browser
+│   └── DataTable/
+│       ├── DataTable.tsx       → Generic reusable table
+│       ├── DataTablePagination.tsx
+│       └── DataTableToolbar.tsx
+│
+└── sections/              → Page sections (page-specific, dùng ở cấp page)
+    ├── home/
+    │   ├── HeroSection.tsx
+    │   ├── TrustBar.tsx
+    │   ├── FeaturedProducts.tsx
+    │   ├── FeaturedProjects.tsx
+    │   ├── WhyChooseUs.tsx
+    │   ├── Testimonials.tsx
+    │   ├── FeaturedBlog.tsx
+    │   └── QuickQuoteSection.tsx
+    ├── products/
+    │   ├── ProductCard.tsx
+    │   ├── ProductGrid.tsx
+    │   ├── ProductFilter.tsx
+    │   └── ProductDetail/
+    │       ├── ProductImages.tsx
+    │       ├── ProductInfo.tsx
+    │       ├── ProductTabs.tsx
+    │       └── ProductSpecs.tsx
+    ├── projects/
+    │   ├── ProjectCard.tsx
+    │   ├── ProjectGrid.tsx
+    │   └── ProjectDetail.tsx
+    ├── blog/
+    │   ├── PostCard.tsx
+    │   ├── PostGrid.tsx
+    │   └── PostContent.tsx
+    └── admin/
+        ├── DashboardStats.tsx
+        ├── LeadTable.tsx
+        ├── ProductEditor.tsx   → Form chỉnh sửa sản phẩm (rich text, image upload)
+        ├── PostEditor.tsx      → Rich text editor cho blog
+        ├── ProjectEditor.tsx
+        └── Sidebar.tsx
+```
+
+### 10.2 Component Contract (Props Pattern)
+
+Mỗi component phải:
+- Có TypeScript interface rõ ràng cho props
+- Có `displayName` để debug
+- Xử lý loading state, error state, và empty state
+- Không gọi API trực tiếp (delegate lên tầng Page/Container)
+
+---
+
+## 11. UI DESIGN SYSTEM
+
+### 11.1 Design Token System
+
+Mọi giá trị thiết kế được định nghĩa qua CSS Custom Properties (Variables) trong `globals.css`, đồng bộ với config của Tailwind. Không hardcode màu sắc hay kích thước trong component.
+
+### 11.2 Aesthetic Direction
+
+**Hướng thiết kế:** Industrial Premium — kết hợp giữa sự chắc chắn của vật liệu công nghiệp (nhôm, kim loại) và tinh tế của kiến trúc hiện đại.
+
+- **Cảm giác:** Chuyên nghiệp, đáng tin cậy, hiện đại — không lạnh lẽo, không quá tối
+- **Signature element:** Đường kẻ ngang accent màu đồng (copper/bronze) — gợi nhớ profile nhôm, tạo điểm nhấn mà không ồn ào
+- **Photography style:** Ảnh thực tế dự án, ánh sáng tự nhiên, góc kiến trúc rõ nét
+
+---
+
+## 12. COLOR PALETTE
+
+> **Lý do lựa chọn:** Tránh màu xanh dương corporate thông thường. Thay vào đó dùng nền trắng ấm + xanh đen sâu + đồng/bronze làm accent — gợi liên tưởng đến nhôm anodized cao cấp và thiết kế công nghiệp Nhật Bản.
+
+```css
+:root {
+  /* === PRIMARY PALETTE === */
+  --color-midnight:    #1A1F2E;   /* Xanh đen sâu — Headlines, primary CTA bg */
+  --color-slate:       #2D3548;   /* Xanh xám — Secondary text, borders đậm */
+  --color-steel:       #4A5568;   /* Xám thép — Body text */
+  --color-mist:        #8896A7;   /* Xám nhạt — Placeholder, disabled */
+
+  /* === ACCENT === */
+  --color-copper:      #B8864E;   /* Đồng — Primary accent, CTA, highlights */
+  --color-copper-light: #D4A574;  /* Đồng nhạt — Hover states */
+  --color-copper-dark: #9A6E38;   /* Đồng tối — Active states */
+
+  /* === NEUTRALS === */
+  --color-white:       #FFFFFF;
+  --color-cream:       #FAF8F5;   /* Nền ấm — Tránh trắng lạnh */
+  --color-gray-50:     #F7F6F4;
+  --color-gray-100:    #EEECE9;
+  --color-gray-200:    #DDD9D3;
+  --color-gray-300:    #C4BFB8;
+
+  /* === SEMANTIC === */
+  --color-success:     #2D7D46;
+  --color-warning:     #D97706;
+  --color-error:       #C53030;
+  --color-info:        #2B6CB0;
+
+  /* === BACKGROUND === */
+  --bg-primary:        var(--color-white);
+  --bg-secondary:      var(--color-cream);
+  --bg-dark:           var(--color-midnight);
+
+  /* === TEXT === */
+  --text-primary:      var(--color-midnight);
+  --text-secondary:    var(--color-steel);
+  --text-muted:        var(--color-mist);
+  --text-inverse:      var(--color-white);
+
+  /* === BORDER === */
+  --border-default:    var(--color-gray-200);
+  --border-focus:      var(--color-copper);
+}
+```
+
+### 12.1 Dark Section Variant
+
+Dùng cho Hero, CTA sections — tạo tương phản và kịch tính:
+
+```css
+.dark-section {
+  background: var(--color-midnight);
+  color: var(--color-white);
+}
+.dark-section .accent { color: var(--color-copper); }
+```
+
+---
+
+## 13. TYPOGRAPHY
+
+> **Lý do chọn font:** `Playfair Display` cho heading — có tính cách, gợi cảm giác kiến trúc và sang trọng, nhưng không quá cổ điển. `Inter` cho body — đọc tốt ở mọi kích thước, neutral, hiện đại. Cả hai đều có trên Google Fonts với variable font support để tối ưu hiệu năng.
+
+```css
+/* === FONT FAMILIES === */
+--font-display: 'Playfair Display', Georgia, serif;    /* Headlines */
+--font-body:    'Inter', -apple-system, sans-serif;    /* Body, UI */
+--font-mono:    'JetBrains Mono', Consolas, monospace; /* Code, specs */
+
+/* === TYPE SCALE (Mobile-first, tăng theo breakpoint) === */
+--text-xs:   0.75rem;    /* 12px — Labels, captions */
+--text-sm:   0.875rem;   /* 14px — Small text, badges */
+--text-base: 1rem;       /* 16px — Body text */
+--text-lg:   1.125rem;   /* 18px — Large body */
+--text-xl:   1.25rem;    /* 20px — Sub-headings */
+--text-2xl:  1.5rem;     /* 24px — H4 */
+--text-3xl:  1.875rem;   /* 30px — H3 */
+--text-4xl:  2.25rem;    /* 36px — H2 */
+--text-5xl:  3rem;       /* 48px — H1 */
+--text-6xl:  3.75rem;    /* 60px — Display (desktop hero) */
+--text-7xl:  4.5rem;     /* 72px — Super display (desktop only) */
+
+/* === LINE HEIGHT === */
+--leading-tight:   1.25;
+--leading-snug:    1.375;
+--leading-normal:  1.5;
+--leading-relaxed: 1.625;
+--leading-loose:   2;
+
+/* === FONT WEIGHT === */
+--weight-regular:    400;
+--weight-medium:     500;
+--weight-semibold:   600;
+--weight-bold:       700;
+--weight-extrabold:  800;
+```
+
+### 13.1 Typography Scale Mapping
+
+| Element | Font | Size (Mobile → Desktop) | Weight | Leading |
+|---|---|---|---|---|
+| Hero H1 | Playfair Display | 2.25rem → 4.5rem | 700 | 1.1 |
+| Page H1 | Playfair Display | 2rem → 3rem | 700 | 1.2 |
+| H2 | Playfair Display | 1.5rem → 2.25rem | 600 | 1.25 |
+| H3 | Playfair Display | 1.25rem → 1.75rem | 600 | 1.3 |
+| H4 | Inter | 1.125rem → 1.25rem | 600 | 1.35 |
+| Body | Inter | 1rem | 400 | 1.625 |
+| Small | Inter | 0.875rem | 400 | 1.5 |
+| Caption | Inter | 0.75rem | 400 | 1.4 |
+| Button | Inter | 0.875rem → 1rem | 600 | 1 |
+| CTA Label | Inter | 0.75rem | 600 + uppercase | 1.2 |
+
+---
+
+## 14. SPACING RULES
+
+> **Lý do dùng 4px base:** Đảm bảo consistency với Tailwind (4px = 1 unit), tạo ra nhịp điệu thị giác rõ ràng, và dễ chia cho các màn hình DPI cao.
+
+```css
+/* === SPACING SCALE (Base: 4px) === */
+--space-0:   0;
+--space-1:   0.25rem;  /* 4px */
+--space-2:   0.5rem;   /* 8px */
+--space-3:   0.75rem;  /* 12px */
+--space-4:   1rem;     /* 16px */
+--space-5:   1.25rem;  /* 20px */
+--space-6:   1.5rem;   /* 24px */
+--space-8:   2rem;     /* 32px */
+--space-10:  2.5rem;   /* 40px */
+--space-12:  3rem;     /* 48px */
+--space-16:  4rem;     /* 64px */
+--space-20:  5rem;     /* 80px */
+--space-24:  6rem;     /* 96px */
+--space-32:  8rem;     /* 128px */
+
+/* === SECTION PADDING === */
+--section-padding-y-sm:   var(--space-12);   /* 48px — mobile */
+--section-padding-y-md:   var(--space-16);   /* 64px — tablet */
+--section-padding-y-lg:   var(--space-24);   /* 96px — desktop */
+--section-padding-x:      var(--space-4);    /* 16px — mobile padding */
+
+/* === CONTAINER MAX-WIDTH === */
+--container-sm:   640px;
+--container-md:   768px;
+--container-lg:   1024px;
+--container-xl:   1280px;
+--container-2xl:  1440px;   /* Max content width */
+
+/* === BORDER RADIUS === */
+--radius-sm:   0.25rem;    /* 4px */
+--radius-md:   0.5rem;     /* 8px */
+--radius-lg:   0.75rem;    /* 12px */
+--radius-xl:   1rem;       /* 16px */
+--radius-full: 9999px;     /* Pill */
+```
+
+### 14.1 Nguyên tắc áp dụng Spacing
+
+- **Giữa các section:** `--section-padding-y` (48-96px tùy breakpoint)
+- **Giữa card và grid gaps:** 16px (mobile) → 24px (tablet) → 32px (desktop)
+- **Padding bên trong card:** 16px (mobile) → 24px (desktop)
+- **Khoảng cách heading → content:** 16px (H3-4), 24px (H1-2)
+- **Form field spacing:** 24px giữa các field
+- **Button padding:** 12px 24px (default), 10px 20px (sm), 14px 32px (lg)
+
+---
+
+## 15. RESPONSIVE RULES
+
+### 15.1 Breakpoints
+
+```css
+/* Theo Tailwind defaults nhưng có custom 2xl */
+--bp-sm:    640px;     /* Small devices */
+--bp-md:    768px;     /* Tablet */
+--bp-lg:    1024px;    /* Desktop */
+--bp-xl:    1280px;    /* Large desktop */
+--bp-2xl:   1536px;    /* Ultra-wide */
+```
+
+### 15.2 Grid System
+
+| Component | Mobile (<768px) | Tablet (768-1023px) | Desktop (≥1024px) |
+|---|---|---|---|
+| Product Grid | 1 col | 2 col | 3-4 col |
+| Project Grid | 1 col | 2 col | 3 col |
+| Blog Grid | 1 col | 2 col | 3 col |
+| Trust Bar | 2x2 grid | 4 col | 4 col |
+| Why Choose Us | 1 col | 2 col | 4 col |
+| Footer | 1 col stacked | 2 col | 5 col |
+
+### 15.3 Navigation Behavior
+
+- **< 768px:** Hamburger menu → Full-screen overlay, CTA "Báo giá" luôn hiện
+- **768px - 1023px:** Hamburger + top bar rút gọn
+- **≥ 1024px:** Horizontal nav full, mega-dropdown cho sản phẩm
+
+### 15.4 Image Optimization
+
+- Tất cả ảnh dùng `next/image` với `sizes` attribute chính xác
+- Product images: `sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw"`
+- Hero: `sizes="100vw"`, `priority={true}`
+- Dùng WebP với fallback JPEG
+- `fill` layout cho gallery, `width/height` cho card
+
+### 15.5 Touch Targets
+
+- Mọi interactive element tối thiểu 44x44px (iOS HIG standard)
+- Khoảng cách tối thiểu giữa các touch targets: 8px
+
+---
+
+## 16. SEO STRATEGY
+
+### 16.1 Keyword Architecture
+
+**Primary Keywords (Volume cao, cạnh tranh cao):**
+- "cửa chớp nhôm" — Head term
+- "cửa chớp nhôm giá rẻ" — Commercial intent
+- "cửa chớp nhôm nhập khẩu"
+
+**Secondary Keywords (Long-tail, conversion cao):**
+- "cửa chớp nhôm ban công"
+- "cửa chớp nhôm phòng khách"
+- "báo giá cửa chớp nhôm [thành phố]"
+- "lắp đặt cửa chớp nhôm tại nhà"
+- "cửa chớp nhôm chống nắng"
+
+**Informational Keywords (Top of funnel, SEO blog):**
+- "cửa chớp nhôm là gì"
+- "so sánh cửa chớp nhôm và gỗ"
+- "kích thước cửa chớp nhôm tiêu chuẩn"
+- "cách vệ sinh cửa chớp nhôm"
+
+### 16.2 URL Structure
+
+Quy tắc: viết thường, có dấu gạch ngang, tiếng Việt không dấu, ngắn gọn.
+
+```
+/san-pham/cua-chop-nhom-ngang
+/san-pham/cua-chop-nhom-doc
+/du-an/biet-thu-thu-duc-2024
+/blog/so-sanh-cua-chop-nhom-va-go
+/blog/ky-thuat/cach-chon-cua-chop-nhom
+```
+
+**Tránh:** query strings trong URL public, ký tự đặc biệt, URL quá dài (>70 ký tự).
+
+### 16.3 Internal Linking Strategy
+
+- Mỗi bài blog phải có ít nhất 2 internal links đến trang sản phẩm liên quan
+- Trang sản phẩm link đến dự án đã dùng sản phẩm đó
+- Breadcrumb trên mọi trang (ngoại trừ trang chủ)
+- Sidebar blog có widget "Sản phẩm liên quan"
+- Footer chứa link đến các trang quan trọng nhất
+
+### 16.4 Technical SEO
+
+- `sitemap.xml` dynamic, tự động cập nhật khi có content mới
+- `robots.txt` chặn `/admin/*`, `/api/*`
+- Canonical URL trên mọi trang (tránh duplicate với pagination)
+- Hreflang nếu có đa ngôn ngữ sau này
+- Core Web Vitals target: LCP < 2.5s, FID < 100ms, CLS < 0.1
+- No broken links — middleware check redirect 301 cho URL cũ
+
+---
+
+## 17. METADATA STRATEGY
+
+### 17.1 Template Engine
+
+Dùng Next.js `metadata` object với `metadataBase` và template.
+
+```
+Title template: "{Page Title} | {Brand Name} — Cửa Chớp Nhôm Cao Cấp"
+Default title: "Cửa Chớp Nhôm Cao Cấp | [Tên Công Ty] — Uy Tín, Bền Đẹp, Giá Tốt"
+```
+
+### 17.2 Metadata Per Page Type
+
+**Trang chủ:**
+- Title: "Cửa Chớp Nhôm Cao Cấp | [Tên Công Ty] — Tư Vấn Miễn Phí"
+- Description: Tối đa 160 ký tự, chứa keyword chính, unique value proposition, CTA
+- OG Image: 1200x630px — ảnh hero đẹp nhất với overlay text logo
+
+**Trang danh mục sản phẩm:**
+- Title: "{Tên danh mục} | Cửa Chớp Nhôm [Tên Công Ty]"
+- Description: Mô tả danh mục + số lượng sản phẩm + CTA
+- Canonical: URL không có query params
+
+**Trang chi tiết sản phẩm:**
+- Title: "{Tên sản phẩm} — Giá, Thông Số, Màu Sắc | [Tên Công Ty]"
+- Description: Excerpt từ admin hoặc auto-generate từ nội dung
+- OG Image: Ảnh sản phẩm chính (1200x630px crop)
+
+**Bài viết blog:**
+- Title: "{Tiêu đề bài} | Blog Cửa Chớp Nhôm [Tên Công Ty]"
+- Description: Excerpt bài viết
+- OG Image: Cover image bài viết
+- `article:published_time`, `article:author`
+
+**Trang dự án:**
+- Title: "Dự Án {Tên dự án} — Cửa Chớp Nhôm | [Tên Công Ty]"
+- OG Image: Cover image dự án
+
+### 17.3 OpenGraph & Twitter Card
+
+Mọi trang cần đầy đủ:
+```
+og:type, og:title, og:description, og:image, og:url
+twitter:card = "summary_large_image"
+twitter:title, twitter:description, twitter:image
+```
+
+---
+
+## 18. SCHEMA.ORG STRATEGY
+
+> **Lý do ưu tiên schema:** Tăng CTR qua rich snippets, giúp Google hiểu entity, cải thiện ranking local SEO.
+
+### 18.1 Schema theo từng trang
+
+**Trang chủ:**
+```json
+{
+  "@type": "LocalBusiness",
+  "name": "[Tên Công Ty]",
+  "description": "...",
+  "url": "https://...",
+  "telephone": "+84...",
+  "address": { "@type": "PostalAddress", ... },
+  "geo": { "@type": "GeoCoordinates", ... },
+  "openingHours": "Mo-Sa 08:00-17:00",
+  "priceRange": "$$",
+  "hasMap": "https://maps.google.com/...",
+  "sameAs": ["facebook.com/...", "zalo.me/..."]
+}
+```
+
+**Sản phẩm (`/san-pham/[slug]`):**
+```json
+{
+  "@type": "Product",
+  "name": "...",
+  "description": "...",
+  "image": ["..."],
+  "sku": "...",
+  "brand": { "@type": "Brand", "name": "..." },
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "VND",
+    "lowPrice": "...",
+    "highPrice": "...",
+    "availability": "https://schema.org/InStock"
+  }
+}
+```
+
+**Bài viết blog:**
+```json
+{
+  "@type": "Article",
+  "headline": "...",
+  "description": "...",
+  "image": "...",
+  "author": { "@type": "Organization", "name": "..." },
+  "publisher": { "@type": "Organization", ... },
+  "datePublished": "...",
+  "dateModified": "..."
+}
+```
+
+**Dự án thi công — dùng `CreativeWork`:**
+```json
+{
+  "@type": "CreativeWork",
+  "name": "Dự án ...",
+  "description": "...",
+  "image": [...],
+  "dateCreated": "...",
+  "creator": { "@type": "Organization", "name": "..." },
+  "locationCreated": { "@type": "Place", "name": "..." }
+}
+```
+
+**FAQ (nếu có trên trang báo giá/liên hệ):**
+```json
+{
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cửa chớp nhôm giá bao nhiêu?",
+      "acceptedAnswer": { "@type": "Answer", "text": "..." }
+    }
+  ]
+}
+```
+
+**Breadcrumb — mọi trang con:**
+```json
+{
+  "@type": "BreadcrumbList",
+  "itemListElement": [...]
+}
+```
+
+---
+
+## 19. AI CHAT FLOW
+
+### 19.1 Kiến trúc
+
+- **Model:** Claude claude-sonnet-4-6 (Anthropic API) — cân bằng chi phí/chất lượng
+- **Streaming:** Server-Sent Events qua `/api/chat`
+- **Session:** UUID trong localStorage, persist trong `chat_sessions` table
+- **Context:** System prompt chứa thông tin công ty, danh sách sản phẩm ngắn gọn, hướng dẫn thu thập lead
+
+### 19.2 System Prompt Structure
+
+```
+[IDENTITY]
+Bạn là trợ lý tư vấn của [Tên Công Ty] — chuyên về cửa chớp nhôm cao cấp.
+Nhiệm vụ: Tư vấn sản phẩm, trả lời câu hỏi kỹ thuật, và gợi ý khách hàng
+để lại thông tin để nhận báo giá chính thức.
+
+[PRODUCTS_CONTEXT]
+{dynamic: danh sách sản phẩm rút gọn từ DB}
+
+[PERSONALITY]
+- Thân thiện, chuyên nghiệp
+- Trả lời ngắn gọn (≤3-4 câu mỗi lượt)
+- Dùng tiếng Việt tự nhiên, không quá văn hoa
+- Không bịa đặt giá cụ thể, luôn gợi ý "để nhận báo giá chính xác"
+
+[LEAD_COLLECTION_TRIGGER]
+Sau 3-4 turns, nếu khách hàng quan tâm, nhẹ nhàng gợi ý:
+"Để tư vấn chính xác hơn, bạn có thể cho mình biết..."
+- Họ tên
+- Số điện thoại  
+- Diện tích / kích thước khoảng cần lắp
+- Địa chỉ thi công
+
+[BOUNDARIES]
+- Không bàn về đối thủ cạnh tranh
+- Không cam kết giá cụ thể
+- Chuyển lead sang nhân viên nếu câu hỏi vượt khả năng
+```
+
+### 19.3 Chat States & UI
+
+```
+STATES:
+  idle         → Widget ẩn, chỉ hiện nút chat nổi (floating button)
+  open-empty   → Chat panel mở, greeting message
+  typing       → User đang nhập
+  ai-thinking  → Spinner + "Đang trả lời..."
+  streaming    → AI text stream từng ký tự
+  lead-form    → Overlay form thu thập thông tin
+  submitted    → Cảm ơn + thông tin liên hệ tiếp theo
+```
+
+### 19.4 Anti-Hallucination Safeguards
+
+- Giá sản phẩm: AI chỉ nói "từ [price_from]" nếu có trong context
+- Thông tin kỹ thuật: Chỉ từ product context được inject
+- Nếu không có thông tin: "Để tư vấn chính xác, bạn vui lòng liên hệ hotline..."
+- Mọi conversation được lưu để review và cải thiện prompt
+
+### 19.5 Rate Limiting
+
+- Max 50 messages/session/ngày
+- Max 10 requests/phút/IP
+- Session token validation
+
+---
+
+## 20. LEAD COLLECTION FLOW
+
+### 20.1 Điểm thu thập Lead
+
+| Touchpoint | Form Type | Priority |
+|---|---|---|
+| Homepage — Quick Quote section | Mini form (tên, SĐT, loại SP) | High |
+| Trang Báo giá | Full form | Very High |
+| Trang chi tiết sản phẩm — Floating CTA | Modal form | High |
+| AI Chat → Lead conversion | Inline trong chat | Medium |
+| Blog sidebar / post-content | Mini form | Low |
+| Trang Liên hệ | Contact form | Medium |
+
+### 20.2 Lead Form Fields
+
+**Mini Form (Trang chủ, Blog):**
+```
+Họ và tên*         [text]
+Số điện thoại*     [tel]
+Sản phẩm quan tâm  [select]
+[Gửi yêu cầu]
+```
+
+**Full Quote Form (Trang Báo giá):**
+```
+Thông tin cá nhân:
+  Họ và tên*         [text]
+  Số điện thoại*     [tel]
+  Email              [email]
+  Tên công ty        [text]   — optional, hiện nếu chọn loại B2B
+
+Loại khách hàng*:  [Cá nhân] [Nhà thầu/KTS] [Chủ đầu tư]
+
+Thông tin dự án:
+  Sản phẩm quan tâm* [multi-select]
+  Diện tích khoảng   [text]   — "30m² ban công"
+  Địa chỉ thi công*  [text]
+  Khoảng ngân sách   [select]
+  Thời gian dự kiến  [select]
+
+Mô tả thêm        [textarea]
+Upload ảnh/file    [file]    — optional
+
+[Gửi yêu cầu báo giá]
+```
+
+### 20.3 Post-Submit Flow
+
+```
+1. Validate → Server Action `createLead`
+2. Save to DB (leads table)
+3. Gửi email xác nhận cho khách (Supabase Edge Function / Resend)
+4. Thông báo cho admin (email + dashboard realtime)
+5. Show success state với:
+   - "Chúng tôi sẽ liên hệ trong vòng [X] giờ làm việc"
+   - Hotline để liên hệ ngay
+   - Gợi ý xem thêm sản phẩm / dự án
+6. Track UTM parameters và source URL
+```
+
+### 20.4 Lead Scoring (Admin)
+
+| Điều kiện | Điểm |
+|---|---|
+| Có email | +10 |
+| Có tên công ty (B2B) | +20 |
+| Diện tích > 100m² | +15 |
+| Từ trang chi tiết sản phẩm | +10 |
+| Từ AI Chat (conversational) | +5 |
+| Ngân sách > 50 triệu | +20 |
+| Lead type = architect/investor | +25 |
+
+---
+
+## 21. ADMIN DASHBOARD FEATURES
+
+### 21.1 Dashboard Overview
+
+**Thống kê realtime:**
+- Leads hôm nay / tuần / tháng (so sánh kỳ trước %)
+- Lead theo trạng thái (funnel chart)
+- Lead theo nguồn (pie chart)
+- Sản phẩm được xem nhiều nhất
+- Bài viết được đọc nhiều nhất
+- Hoạt động gần đây (activity feed)
+
+**Quick Actions:**
+- "+ Thêm sản phẩm", "+ Viết bài", "+ Cập nhật dự án"
+- "Xem leads mới" badge với số chưa xử lý
+
+### 21.2 Quản lý Sản phẩm
+
+**Danh sách sản phẩm:**
+- Table với cột: Ảnh thumbnail | Tên | Danh mục | Giá | Trạng thái | Ngày tạo
+- Filter: Danh mục | Trạng thái | Nổi bật
+- Search: Tên, SKU
+- Bulk actions: Xóa, Đổi trạng thái, Đánh dấu nổi bật
+- Sắp xếp kéo thả (sort_order)
+
+**Form thêm/sửa sản phẩm:**
+- Thông tin cơ bản: Tên, SKU, Danh mục, Mô tả ngắn
+- Rich text editor: Mô tả chi tiết
+- Bảng thông số kỹ thuật: Key-value editor (thêm/xóa hàng dynamic)
+- Giá: Từ / Đến (VND)
+- Upload ảnh: Multi-upload, sắp xếp kéo thả, chọn ảnh chính
+- Màu sắc có sẵn: Thêm/xóa màu với tên và hex code
+- Upload catalog PDF
+- SEO fields: Meta title, description, OG image
+- Trạng thái: Draft / Published / Archived
+- Preview (popup preview trước khi publish)
+
+### 21.3 Quản lý Bài viết Blog
+
+**Features:**
+- Rich text editor (tiptap hoặc tương đương)
+- Auto-generate slug từ title
+- Tính toán read_time tự động
+- Chọn cover image từ Media Library
+- Tags management (combobox)
+- SEO fields đầy đủ
+- Schedule publish
+- Revision history (lưu các phiên bản)
+
+### 21.4 Quản lý Dự án Thi công
+
+- Form tương tự sản phẩm
+- Trường đặc biệt: Loại dự án, Địa điểm, Ngày hoàn thành, Diện tích
+- Multi-image gallery với caption
+- Liên kết với sản phẩm đã dùng
+- Featured flag cho homepage
+
+### 21.5 Quản lý Leads (CRM nhẹ)
+
+**Danh sách lead:**
+- Kanban view (theo status) + Table view
+- Filter: Trạng thái | Nguồn | Loại khách | Người phụ trách | Khoảng thời gian
+- Search: Tên, SĐT, Email
+- Export CSV
+
+**Chi tiết lead:**
+- Thông tin đầy đủ của khách hàng
+- Sản phẩm quan tâm (link sang sản phẩm)
+- Timeline hoạt động (notes, calls, status changes)
+- Assign cho nhân viên
+- Thêm note, log cuộc gọi
+- Đổi status với dropdown
+- Link sang chat session nếu có
+- Nút "Gửi email" (mở email client với template)
+
+### 21.6 Media Library
+
+- Grid view upload/browse
+- Drag & drop upload (multi-file)
+- Auto-compress ảnh khi upload (max 2MB, convert to WebP)
+- Search theo tên file
+- Filter theo loại (ảnh / PDF)
+- Copy URL nhanh
+- Chọn ảnh trong form sản phẩm/bài viết
+
+### 21.7 Phân quyền (Role-Based Access Control)
+
+| Tính năng | Super Admin | Admin | Editor | Viewer |
+|---|---|---|---|---|
+| Xem dashboard | ✅ | ✅ | ✅ | ✅ |
+| Xem leads | ✅ | ✅ | ❌ | ❌ |
+| Cập nhật lead status | ✅ | ✅ | ❌ | ❌ |
+| Thêm/sửa sản phẩm | ✅ | ✅ | ✅ | ❌ |
+| Publish sản phẩm | ✅ | ✅ | ❌ | ❌ |
+| Thêm/sửa bài viết | ✅ | ✅ | ✅ | ❌ |
+| Publish bài viết | ✅ | ✅ | ❌ | ❌ |
+| Xóa nội dung | ✅ | ✅ | ❌ | ❌ |
+| Media library | ✅ | ✅ | ✅ | ❌ |
+| Quản lý người dùng | ✅ | ❌ | ❌ | ❌ |
+| Cài đặt hệ thống | ✅ | ❌ | ❌ | ❌ |
+
+Triển khai qua Supabase RLS Policies và middleware kiểm tra `profiles.role`.
+
+---
+
+## 22. FOLDER STRUCTURE
+
+```
+project-root/
+├── .env.local                    → Environment variables (không commit)
+├── .env.example                  → Template env (commit)
+├── .gitignore
+├── next.config.ts
+├── tailwind.config.ts
+├── tsconfig.json
+├── package.json
+├── middleware.ts                 → Auth guard, redirect logic
+│
+├── app/                          → Next.js App Router (xem mục 9)
+│
+├── components/                   → React components (xem mục 10)
+│
+├── lib/                          → Core library code
+│   ├── supabase/
+│   │   ├── client.ts             → Browser client
+│   │   ├── server.ts             → Server client (cookies)
+│   │   └── middleware.ts         → Middleware client
+│   ├── ai/
+│   │   ├── anthropic.ts          → Anthropic client setup
+│   │   └── chat-system-prompt.ts → System prompt builder
+│   ├── validations/
+│   │   ├── lead.schema.ts        → Zod schemas
+│   │   ├── product.schema.ts
+│   │   └── post.schema.ts
+│   ├── utils/
+│   │   ├── format.ts             → formatPrice, formatDate, formatReadTime
+│   │   ├── slug.ts               → generateSlug (tiếng Việt → slug)
+│   │   ├── seo.ts                → buildMetadata helper
+│   │   └── cn.ts                 → clsx + tailwind-merge
+│   └── constants/
+│       ├── routes.ts             → APP_ROUTES object
+│       ├── config.ts             → Site config (name, URL, etc.)
+│       └── enums.ts              → Status enums, role enums
+│
+├── hooks/                        → Custom React hooks
+│   ├── useChat.ts
+│   ├── useMediaUpload.ts
+│   ├── useDebounce.ts
+│   └── useLocalStorage.ts
+│
+├── types/                        → TypeScript type definitions
+│   ├── database.types.ts         → Generated từ Supabase CLI
+│   ├── api.types.ts
+│   └── app.types.ts              → Custom app types
+│
+├── actions/                      → Server Actions
+│   ├── leads.ts
+│   ├── products.ts
+│   ├── posts.ts
+│   ├── projects.ts
+│   ├── media.ts
+│   └── settings.ts
+│
+├── public/
+│   ├── images/
+│   │   ├── logo.svg
+│   │   ├── og-default.jpg        → Default OG image
+│   │   └── icons/
+│   ├── fonts/                    → Self-hosted fonts (nếu không dùng Google Fonts)
+│   └── favicon.ico
+│
+├── supabase/
+│   ├── migrations/               → SQL migration files
+│   │   ├── 001_initial_schema.sql
+│   │   ├── 002_rls_policies.sql
+│   │   ├── 003_search_vectors.sql
+│   │   └── 004_seed_data.sql
+│   ├── functions/                → Edge Functions
+│   │   └── send-lead-notification/
+│   └── config.toml
+│
+└── docs/
+    ├── SPEC.md                   → File này
+    ├── DEPLOYMENT.md
+    └── CONTENT_GUIDE.md          → Hướng dẫn cho admin viết nội dung
+```
+
+---
+
+## 23. CODING CONVENTION
+
+### 23.1 TypeScript
+
+- **Strict mode:** `"strict": true` trong tsconfig
+- **No `any`:** Dùng `unknown` nếu cần, sau đó narrow type
+- **No non-null assertion (`!`):** Xử lý null/undefined rõ ràng
+- **Interface vs Type:** Dùng `interface` cho object shapes, `type` cho unions/intersections
+- **Return types:** Explicit return type cho mọi function public
+
+### 23.2 React / Next.js
+
+- **Server Components by default:** Chỉ thêm `'use client'` khi thực sự cần (hooks, event handlers, browser API)
+- **Tách concerns:** Data fetching ở Server Component, interactivity ở Client Component
+- **Suspense boundaries:** Wrap mọi data-fetching component với `<Suspense fallback={<Skeleton/>}>`
+- **Error boundaries:** Mỗi route segment có `error.tsx`
+- **No prop drilling:** Quá 2 levels → dùng composition hoặc context
+- **Keys:** Không dùng array index làm key trong danh sách dynamic
+
+### 23.3 Server Actions
+
+- Mọi action đều có `'use server'` directive
+- Validate input với Zod trước khi xử lý
+- Kiểm tra authentication/authorization ở đầu mỗi action
+- Return `{ success: true, data }` hoặc `{ success: false, error }` — không throw
+
+### 23.4 Data Fetching
+
+- Server Component: Gọi Supabase trực tiếp (server client)
+- Client Component: Gọi qua Server Actions hoặc fetch `/api/*`
+- Caching: Sử dụng `{ next: { revalidate: N } }` hoặc `{ cache: 'no-store' }` có chủ đích
+- Không có `useEffect` để fetch data — dùng React Query chỉ nếu cần client-side refetch
+
+### 23.5 CSS / Styling
+
+- **Tailwind-first:** Ưu tiên utility classes
+- **No inline styles:** Ngoại lệ duy nhất là dynamic values không thể làm bằng Tailwind
+- **`cn()` helper:** Luôn dùng `cn()` (clsx + tailwind-merge) khi merge classes conditionally
+- **CSS Variables:** Màu sắc, spacing, typography từ CSS variables, không hardcode
+- **Component variants:** Dùng `cva` (class-variance-authority) cho component với nhiều variants
+
+### 23.6 Error Handling
+
+- Không để lỗi im lặng (`console.error` không đủ)
+- User-facing errors phải có message tiếng Việt rõ ràng
+- Server errors: Log đầy đủ, response ra ngoài chỉ có error code (không leak internals)
+- Form errors: Hiển thị inline ngay dưới field bị lỗi
+
+---
+
+## 24. NAMING CONVENTION
+
+### 24.1 Files & Directories
+
+```
+kebab-case:   components/ProductCard.tsx        → thư mục: product-card/ (nếu có)
+PascalCase:   Components: ProductCard.tsx
+camelCase:    Hooks: useChat.ts, Utils: formatPrice.ts
+SCREAMING:    Constants: APP_ROUTES, MAX_FILE_SIZE
+```
+
+### 24.2 TypeScript
+
+```typescript
+// Interfaces: PascalCase + "I" prefix KHÔNG dùng
+interface ProductCard { ... }       // ✅
+interface IProductCard { ... }      // ❌
+
+// Types: PascalCase
+type LeadStatus = 'new' | 'contacted' | ...
+
+// Enums: PascalCase + values SCREAMING_SNAKE
+enum ProductStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+}
+
+// Variables, functions: camelCase
+const productList = [...]
+function createLead(data: LeadInput) { ... }
+
+// Constants: SCREAMING_SNAKE_CASE
+const MAX_UPLOAD_SIZE = 5 * 1024 * 1024
+const DEFAULT_PAGINATION_LIMIT = 12
+
+// Boolean variables: is/has/can prefix
+const isLoading = true
+const hasError = false
+const canEdit = user.role === 'admin'
+```
+
+### 24.3 Database
+
+```sql
+-- Tables: snake_case, plural
+products, blog_posts, lead_activities
+
+-- Columns: snake_case
+created_at, meta_description, is_featured
+
+-- Indexes: idx_{table}_{column}
+idx_products_slug
+idx_leads_status_created_at
+
+-- Foreign keys: {table_singular}_id
+product_id, category_id, author_id
+```
+
+### 24.4 API Routes
+
+```
+Dùng tiếng Việt (slug hóa) cho public routes:
+/san-pham, /bai-viet, /du-an
+
+Dùng tiếng Anh cho API routes:
+/api/products, /api/leads, /api/admin/stats
+
+Server Actions: verb + noun
+createLead, updateProduct, deleteMedia
+```
+
+### 24.5 CSS Classes (Tailwind + Custom)
+
+```
+Custom classes (nếu cần): kebab-case với prefix
+.site-header, .product-card, .chat-bubble
+
+Modifier pattern: .product-card--featured
+State pattern: .is-active, .is-loading (chỉ khi JS toggle)
+```
+
+---
+
+## 25. SECURITY
+
+### 25.1 Authentication
+
+- **Provider:** Supabase Auth — Email/Password cho admin
+- **Session:** Cookie-based (httpOnly, Secure, SameSite=Lax)
+- **Token refresh:** Tự động qua Supabase client
+- **Admin routes:** Middleware kiểm tra session trước khi render
+- **Multiple failed logins:** Rate limit 5 attempts / 15 phút → lockout
+
+### 25.2 Authorization
+
+- **Row Level Security (RLS):** Bật trên mọi table trong Supabase
+- **RLS Policies:**
+  ```sql
+  -- products: public read, admin write
+  CREATE POLICY "Products are publicly readable"
+    ON products FOR SELECT USING (status = 'published');
+  
+  CREATE POLICY "Admin can manage products"
+    ON products FOR ALL USING (
+      auth.uid() IN (SELECT id FROM profiles WHERE role IN ('admin', 'super_admin'))
+    );
+  ```
+- **Server Actions:** Kiểm tra role đầu mỗi action (không tin client-side auth check)
+- **API Routes:** Verify JWT token từ header/cookie
+
+### 25.3 Input Validation & Sanitization
+
+- **Zod:** Validate tất cả input từ form và API
+- **HTML sanitization:** Dùng `DOMPurify` hoặc `sanitize-html` trước khi lưu rich text
+- **File upload:**
+  - Chỉ cho phép: JPEG, PNG, WebP, PDF
+  - Max size: 5MB cho ảnh, 20MB cho PDF
+  - Kiểm tra MIME type thực (không chỉ extension)
+  - Rename file khi upload (UUID + extension)
+- **SQL Injection:** Không xảy ra vì dùng Supabase client (parameterized queries)
+
+### 25.4 XSS Prevention
+
+- Next.js escape HTML mặc định
+- Chỉ dùng `dangerouslySetInnerHTML` cho rich text đã sanitize
+- Content Security Policy (CSP) header:
+  ```
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' (chỉ vì Next.js);
+  style-src 'self' 'unsafe-inline' fonts.googleapis.com;
+  img-src 'self' data: [supabase-project-url] *.supabase.co;
+  connect-src 'self' *.supabase.co *.anthropic.com;
+  ```
+
+### 25.5 Environment Variables
+
+```
+Phân loại:
+NEXT_PUBLIC_*    → Expose to client (URL, public keys)
+                   NEXT_PUBLIC_SUPABASE_URL
+                   NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+Private (server only):
+                   SUPABASE_SERVICE_ROLE_KEY
+                   ANTHROPIC_API_KEY
+                   RESEND_API_KEY (email)
+```
+
+- Service role key KHÔNG BAO GIỜ dùng phía client
+- `.env.local` trong `.gitignore`
+- Vercel: Lưu sensitive keys trong Environment Variables
+
+### 25.6 Rate Limiting
+
+- AI Chat: 10 requests/min/IP
+- Lead form: 3 submissions/10 min/IP
+- Auth: 5 failed attempts/15 min
+- Thực hiện qua Vercel Edge Middleware + Upstash Redis (nếu cần)
+
+### 25.7 Dependency Security
+
+- `npm audit` trong CI pipeline
+- Dependabot alerts enabled
+- Không dùng unmaintained packages
+
+---
+
+## 26. PERFORMANCE OPTIMIZATION
+
+### 26.1 Core Web Vitals Targets
+
+| Metric | Target | Measurement |
+|---|---|---|
+| LCP (Largest Contentful Paint) | < 2.5s | Google Search Console |
+| INP (Interaction to Next Paint) | < 200ms | CrUX report |
+| CLS (Cumulative Layout Shift) | < 0.1 | Lighthouse |
+| FCP (First Contentful Paint) | < 1.8s | Lighthouse |
+| TTFB (Time to First Byte) | < 600ms | WebPageTest |
+
+### 26.2 Image Optimization
+
+- `next/image` với auto-optimization (WebP, AVIF conversion, lazy loading)
+- `sizes` attribute chính xác cho từng context
+- Hero image: `priority={true}`, preload hint
+- Lazy load tất cả ảnh below the fold
+- Supabase Storage: Transform API cho responsive images
+  ```
+  ?width=800&quality=80&format=webp
+  ```
+- Alt text bắt buộc cho mọi ảnh (SEO + Accessibility)
+- Placeholder blur (`blurDataURL`) cho ảnh từ Supabase
+
+### 26.3 JavaScript Optimization
+
+- Tree-shaking: Import specific từ library, không import cả thư viện
+  ```typescript
+  import { format } from 'date-fns/format'  // ✅
+  import * as dateFns from 'date-fns'        // ❌
+  ```
+- Code splitting: Next.js tự động, thêm `dynamic()` cho heavy components
+  - Rich text editor → dynamic import
+  - Image lightbox → dynamic import
+  - Chart.js (nếu dùng) → dynamic import
+- Bundle analyzer: `@next/bundle-analyzer` để kiểm tra
+
+### 26.4 Caching Strategy
+
+```
+Static assets (JS/CSS): max-age=31536000, immutable (Next.js default)
+Images từ Supabase: Cache-Control: public, max-age=86400
+ISR pages: stale-while-revalidate theo revalidate config
+API routes: Tùy endpoint, no-cache cho dynamic data
+```
+
+### 26.5 Font Optimization
+
+```typescript
+// next/font (tự host, zero layout shift)
+import { Playfair_Display, Inter } from 'next/font/google'
+
+const playfair = Playfair_Display({
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-display',
+})
+```
+
+- `display: swap` để tránh FOIT
+- Chỉ load weights cần thiết (400, 600, 700)
+- `preload: true` cho font dùng above the fold
+
+### 26.6 Database Query Optimization
+
+- Index tất cả foreign keys và columns dùng trong WHERE/ORDER BY
+- Pagination qua `LIMIT/OFFSET` hoặc cursor-based (cho table lớn)
+- Full-text search: `search_vector` column với `GIN index`
+- `SELECT` chỉ columns cần thiết (không `SELECT *`)
+- Views hoặc materialized views cho dashboard stats phức tạp
+
+### 26.7 Third-party Scripts
+
+- Google Analytics / Tag Manager: Load async, sau `window.onload`
+- Chat widget: Deferred load (load sau 3s hoặc sau user interaction)
+- Facebook Pixel (nếu có): Async, noscript fallback
+- Zalo OA SDK: Async
+
+---
+
+## 27. ACCESSIBILITY (WCAG)
+
+> **Target:** WCAG 2.1 Level AA
+
+### 27.1 Semantic HTML
+
+- Dùng đúng heading hierarchy (H1 → H2 → H3, không skip)
+- Mỗi trang có duy nhất một H1
+- `<main>`, `<nav>`, `<header>`, `<footer>`, `<article>`, `<section>` đúng ngữ cảnh
+- `<button>` cho actions, `<a>` cho navigation (không dùng `div` với `onClick`)
+
+### 27.2 Keyboard Navigation
+
+- Mọi interactive element đều focus được (Tab order hợp lý)
+- Visible focus indicator (ring style, không bỏ outline)
+- Skip link: "Bỏ qua điều hướng" → anchor `#main-content`
+- Modal/Dialog: Focus trap khi mở, trả focus khi đóng
+- Dropdown menu: Arrow keys điều hướng
+
+### 27.3 Color Contrast
+
+- Text trên nền: Minimum 4.5:1 (AA), target 7:1 (AAA) cho body text
+- Large text (≥18px hoặc 14px bold): Minimum 3:1
+- Non-text UI (icons, borders): Minimum 3:1
+- Không convey thông tin chỉ qua màu sắc (dùng thêm icon hoặc text)
+
+### 27.4 Images & Media
+
+- Alt text mô tả nội dung (không phải "image", không lặp caption)
+- Ảnh trang trí: `alt=""` (empty, không omit)
+- Icon buttons: `aria-label` bắt buộc
+
+### 27.5 Forms
+
+- Mọi input đều có `<label>` liên kết (không dùng placeholder làm label)
+- Error messages: Rõ ràng, liên kết với input qua `aria-describedby`
+- Required fields: Đánh dấu rõ, không chỉ màu đỏ
+- Success messages: Thông báo cho screen reader (`aria-live="polite"`)
+
+### 27.6 Motion
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+---
+
+## 28. DEPLOYMENT STRATEGY
+
+### 28.1 Environments
+
+| Environment | Branch | URL | Purpose |
+|---|---|---|---|
+| Development | local | localhost:3000 | Phát triển local |
+| Staging | `develop` | staging.domain.com | QA, test trước production |
+| Production | `main` | domain.com | Live |
+
+### 28.2 Vercel Setup
+
+- **Framework:** Next.js (auto-detected)
+- **Build command:** `next build`
+- **Output:** Standalone (`.next`)
+- **Root directory:** `/` (hoặc `apps/web` nếu monorepo)
+- **Environment variables:** Cấu hình trong Vercel Dashboard per environment
+- **Domains:** Custom domain với SSL tự động
+
+### 28.3 CI/CD Pipeline
+
+```yaml
+# Trigger on PR và push to main
+1. Lint (ESLint + Prettier check)
+2. Type check (tsc --noEmit)
+3. Unit tests (vitest)
+4. Build (next build)
+5. Deploy to Staging (Vercel preview)
+6. E2E smoke test (Playwright — chỉ trang chủ, form báo giá)
+7. Manual approval → Deploy to Production
+```
+
+### 28.4 Database Migrations
+
+- Migration files đặt trong `supabase/migrations/`
+- Chạy qua Supabase CLI: `supabase db push`
+- Không bao giờ sửa migration đã chạy — tạo migration mới
+- Seed data cho staging: `supabase/seed.sql`
+
+### 28.5 Vercel Edge Network
+
+- Static assets: CDN auto (Vercel)
+- ISR pages: Edge caching, revalidate on-demand qua `revalidatePath()`
+- Image Optimization: Vercel's built-in (nếu không dùng Supabase Transform)
+
+### 28.6 Monitoring
+
+- **Vercel Analytics:** Core Web Vitals real-user monitoring
+- **Vercel Logs:** Runtime errors, function logs
+- **Supabase Dashboard:** Query performance, connection pool
+- **Uptime:** Better Uptime hoặc UptimeRobot (ping mỗi 5 phút)
+- **Error tracking:** Sentry (production only)
+
+### 28.7 Backup Strategy
+
+- Supabase: Automatic daily backups (Point-in-time recovery trên Pro plan)
+- Supabase Storage: Files trong S3-compatible storage (replicated)
+- Code: GitHub (remote backup)
+
+---
+
+## 29. FUTURE SCALABILITY
+
+### 29.1 Content & Features
+
+| Tính năng | Khi nào | Ghi chú |
+|---|---|---|
+| Đa ngôn ngữ (i18n) | > 10% traffic nước ngoài | `next-intl`, URL: `/en/`, `/vi/` |
+| Cổng thanh toán | Khi bán online | VNPay, MoMo qua `/api/checkout` |
+| Hệ thống đánh giá sản phẩm | 6 tháng sau launch | Table `product_reviews` |
+| Affiliate/Referral | Khi mở rộng kênh | Code tham chiếu trong lead |
+| Live chat (agent) | Khi có đội support | Tích hợp Tawk.to / Zalo |
+| Email marketing | 6 tháng | Resend + danh sách từ leads |
+| Hệ thống quản lý đơn hàng | Khi scale B2B | Module mới trong admin |
+
+### 29.2 Technical Scalability
+
+**Database:**
+- Read replicas khi traffic tăng (Supabase Pro hỗ trợ)
+- Partition `lead_activities` theo tháng khi > 1M rows
+- Redis cache (Upstash) cho hot data (sản phẩm nổi bật, settings)
+
+**File Storage:**
+- Supabase Storage tự scale (S3-compatible)
+- CDN layer: Cloudflare trước Supabase Storage khi cần
+
+**Compute:**
+- Vercel tự scale serverless functions
+- Edge Runtime cho middleware (hiện tại đã dùng)
+- Tách admin API thành separate service nếu cần (microservice)
+
+**Search:**
+- Hiện tại: PostgreSQL full-text search (đủ cho ≤ 10,000 sản phẩm)
+- Scale lên: Algolia hoặc Typesense khi cần advanced search
+
+### 29.3 Architecture Evolution Path
+
+```
+Phase 1 (Hiện tại): Monolith Next.js + Supabase
+    ↓ (khi team > 5 devs)
+Phase 2: Turborepo monorepo (apps/web, apps/admin riêng)
+    ↓ (khi traffic > 100K/tháng)
+Phase 3: Tách API → Standalone Hono/Fastify service
+    ↓ (khi cần)
+Phase 4: Micro-frontends hoặc native app
+```
+
+### 29.4 Code Maintainability
+
+- **Testing:** Viết test cho Server Actions (integration), critical UI components (unit)
+- **Documentation:** JSDoc cho public functions, README cho mỗi module phức tạp
+- **Storybook:** Cho design system components (Phase 2)
+- **ADR (Architecture Decision Records):** Lưu trong `docs/adr/` mọi quyết định kiến trúc quan trọng
+
+---
+
+## PHỤ LỤC
+
+### A. Danh sách Dependencies đề xuất
+
+```json
+{
+  "dependencies": {
+    "next": "^15.x",
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
+    "@anthropic-ai/sdk": "latest",
+    "zod": "^3.x",
+    "class-variance-authority": "^0.x",
+    "clsx": "^2.x",
+    "tailwind-merge": "^2.x",
+    "lucide-react": "latest",
+    "@tiptap/react": "^2.x",
+    "next-themes": "latest",
+    "resend": "latest",
+    "sanitize-html": "^2.x",
+    "date-fns": "^3.x"
+  },
+  "devDependencies": {
+    "typescript": "^5.x",
+    "tailwindcss": "^3.x",
+    "@next/bundle-analyzer": "latest",
+    "vitest": "latest",
+    "@playwright/test": "latest",
+    "prettier": "^3.x",
+    "eslint": "^8.x",
+    "eslint-config-next": "latest"
+  }
+}
+```
+
+### B. Checklist trước khi launch
+
+- [ ] Core Web Vitals đạt "Good" trên Lighthouse
+- [ ] sitemap.xml đã đăng ký trên Google Search Console
+- [ ] robots.txt đúng (chặn /admin, /api)
+- [ ] Schema.org markup validate trên Google Rich Results Test
+- [ ] Mọi form có honeypot chống spam
+- [ ] SSL/HTTPS hoạt động
+- [ ] 404 page custom
+- [ ] Ảnh mặc định OG (1200x630) đã có
+- [ ] Google Analytics / Search Console đã kết nối
+- [ ] Rate limiting đã test
+- [ ] Admin accounts đã tạo với role đúng
+- [ ] Backup đã verify
+- [ ] Hotline trên trang hiển thị đúng và hoạt động
+
+### C. Supabase Storage Buckets
+
+```
+buckets:
+  products/       → Public, ảnh sản phẩm
+  projects/       → Public, ảnh dự án thi công
+  blog/           → Public, ảnh bài viết
+  catalogs/       → Public, PDF catalog
+  general/        → Public, ảnh tổng quát
+  avatars/        → Public, ảnh đại diện admin
+```
+
+Policies: Public bucket (anonymous read), authenticated write.  
+File size limits: Images 5MB, PDFs 20MB.
+
+---
+
+*Tài liệu này là đặc tả kỹ thuật hoàn chỉnh để AI Coding Agent (Cursor) có thể xây dựng toàn bộ dự án từ đầu. Mọi quyết định kiến trúc đều có giải thích lý do. Không cần thêm context bên ngoài tài liệu này để bắt đầu code.*
+
+---
+**END OF SPECIFICATION — v1.0.0**

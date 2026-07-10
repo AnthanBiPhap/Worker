@@ -1,0 +1,77 @@
+{
+  "name": "cua-chop-nhom",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.4.1",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
+    "@fullcalendar/core": "^6.1.21",
+    "@fullcalendar/daygrid": "^6.1.21",
+    "@fullcalendar/interaction": "^6.1.21",
+    "@fullcalendar/list": "^6.1.21",
+    "@fullcalendar/react": "^6.1.21",
+    "@fullcalendar/timegrid": "^6.1.21",
+    "@react-jvectormap/core": "^1.0.4",
+    "@react-jvectormap/world": "^1.1.2",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.110.2",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/postcss": "^4.3.2",
+    "apexcharts": "^5.16.0",
+    "date-fns": "^4.4.0",
+    "flatpickr": "^4.6.13",
+    "next": "16.2.10",
+    "react": "19.2.4",
+    "react-apexcharts": "^2.1.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "19.2.4",
+    "react-dropzone": "^15.0.0",
+    "resend": "^6.17.2",
+    "sanitize-html": "^2.17.5",
+    "swiper": "^14.0.5",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.10",
+    "@playwright/test": "^1.61.1",
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "prettier": "^3.9.5",
+    "typescript": "^5",
+    "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "@react-jvectormap/core": {
+      "react": "^16.8.0 || ^17 || ^18 || ^19",
+      "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
+    },
+    "@react-jvectormap/world": {
+      "react": "^16.8.0 || ^17 || ^18 || ^19",
+      "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
+    }
+  }
+}
