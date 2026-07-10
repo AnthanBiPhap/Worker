@@ -1,18 +1,52 @@
 "use client";
-import React from "react";
+import React, { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { updateProfile } from "@/actions/profile";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
+import type { EditableProfile } from "./types";
 
-export default function UserInfoCard() {
+type UserInfoCardProps = {
+  profile: EditableProfile;
+};
+
+const emptyValue = "Chưa cập nhật";
+
+export default function UserInfoCard({ profile }: UserInfoCardProps) {
   const { isOpen, openModal, closeModal } = useModal();
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
-    closeModal();
+  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = formRef.current;
+
+    if (!form) {
+      return;
+    }
+
+    setError(null);
+
+    startTransition(() => {
+      void (async () => {
+        const result = await updateProfile(new FormData(form));
+
+        if (!result.success) {
+          setError(result.error.message);
+          return;
+        }
+
+        closeModal();
+        router.refresh();
+      })();
+    });
   };
+
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -27,7 +61,7 @@ export default function UserInfoCard() {
                 First Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Musharof
+                {profile.firstName || emptyValue}
               </p>
             </div>
 
@@ -36,7 +70,7 @@ export default function UserInfoCard() {
                 Last Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Chowdhury
+                {profile.lastName || emptyValue}
               </p>
             </div>
 
@@ -45,7 +79,7 @@ export default function UserInfoCard() {
                 Email address
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                randomuser@pimjo.com
+                {profile.email || emptyValue}
               </p>
             </div>
 
@@ -54,7 +88,7 @@ export default function UserInfoCard() {
                 Phone
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                +09 363 398 46
+                {profile.phone || emptyValue}
               </p>
             </div>
 
@@ -63,7 +97,7 @@ export default function UserInfoCard() {
                 Bio
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Team Manager
+                {profile.bio || emptyValue}
               </p>
             </div>
           </div>
@@ -71,7 +105,7 @@ export default function UserInfoCard() {
 
         <button
           onClick={openModal}
-          className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto"
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200 lg:inline-flex lg:w-auto"
         >
           <svg
             className="fill-current"
@@ -102,83 +136,55 @@ export default function UserInfoCard() {
               Update your details to keep your profile up-to-date.
             </p>
           </div>
-          <form className="flex flex-col">
+          <form ref={formRef} className="flex flex-col" onSubmit={handleSubmit}>
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
               <div>
-                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Social Links
-                </h5>
-
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Label>Facebook</Label>
-                    <Input
-                      type="text"
-                      defaultValue="https://www.facebook.com/PimjoHQ"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>X.com</Label>
-                    <Input type="text" defaultValue="https://x.com/PimjoHQ" />
-                  </div>
-
-                  <div>
-                    <Label>Linkedin</Label>
-                    <Input
-                      type="text"
-                      defaultValue="https://www.linkedin.com/company/pimjo"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>Instagram</Label>
-                    <Input
-                      type="text"
-                      defaultValue="https://instagram.com/PimjoHQ"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-7">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   Personal Information
                 </h5>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>First Name</Label>
-                    <Input type="text" defaultValue="Musharof" />
+                    <Label htmlFor="first_name">First Name</Label>
+                    <Input id="first_name" name="first_name" type="text" defaultValue={profile.firstName} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Last Name</Label>
-                    <Input type="text" defaultValue="Chowdhury" />
+                    <Label htmlFor="last_name">Last Name</Label>
+                    <Input id="last_name" name="last_name" type="text" defaultValue={profile.lastName} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Email Address</Label>
-                    <Input type="text" defaultValue="randomuser@pimjo.com" />
+                    <Input type="email" defaultValue={profile.email} disabled />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Phone</Label>
-                    <Input type="text" defaultValue="+09 363 398 46" />
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input id="phone" name="phone" type="text" defaultValue={profile.phone} />
+                  </div>
+
+                  <div className="col-span-2 lg:col-span-1">
+                    <Label htmlFor="job_title">Job Title</Label>
+                    <Input id="job_title" name="job_title" type="text" defaultValue={profile.jobTitle} />
                   </div>
 
                   <div className="col-span-2">
-                    <Label>Bio</Label>
-                    <Input type="text" defaultValue="Team Manager" />
+                    <Label htmlFor="bio">Bio</Label>
+                    <Input id="bio" name="bio" type="text" defaultValue={profile.bio} />
                   </div>
                 </div>
               </div>
             </div>
+            {error && (
+              <p className="mt-4 px-2 text-sm text-error-500">{error}</p>
+            )}
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <Button size="sm" variant="outline" onClick={closeModal}>
+              <Button size="sm" variant="outline" onClick={closeModal} disabled={isPending}>
                 Close
               </Button>
-              <Button size="sm" onClick={handleSave}>
-                Save Changes
+              <Button size="sm" type="submit" disabled={isPending}>
+                {isPending ? "Saving..." : "Save Changes"}
               </Button>
             </div>
           </form>

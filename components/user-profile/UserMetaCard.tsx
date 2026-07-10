@@ -1,51 +1,104 @@
 "use client";
-import React from "react";
+import React, { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { updateProfile } from "@/actions/profile";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 import Image from "next/image";
+import FileInput from "../form/input/FileInput";
+import type { EditableProfile } from "./types";
 
 
-export default function UserMetaCard() {
+type UserMetaCardProps = {
+  profile: EditableProfile;
+};
+
+export default function UserMetaCard({ profile }: UserMetaCardProps) {
   const { isOpen, openModal, closeModal } = useModal();
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
-    closeModal();
+  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [modalAvatarPreview, setModalAvatarPreview] = useState(profile.avatarUrl);
+
+  const handleOpenModal = () => {
+    setModalAvatarPreview(profile.avatarUrl);
+    setError(null);
+    openModal();
   };
+
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setModalAvatarPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = formRef.current;
+
+    if (!form) {
+      return;
+    }
+
+    setError(null);
+
+    startTransition(() => {
+      void (async () => {
+        const result = await updateProfile(new FormData(form));
+
+        if (!result.success) {
+          setError(result.error.message);
+          return;
+        }
+
+        closeModal();
+        router.refresh();
+      })();
+    });
+  };
+
+  const location = [profile.cityState, profile.country].filter(Boolean).join(", ");
+
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
-            <div className="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
+            <div className="relative h-20 w-20 overflow-hidden rounded-full border border-gray-200 dark:border-gray-800">
               <Image
-                width={80}
-                height={80}
-                src="/images/user/owner.jpg"
+                fill
+                src={profile.avatarUrl || "/images/user/owner.jpg"}
                 alt="user"
+                unoptimized
+                className="object-cover object-center"
               />
             </div>
             <div className="order-3 xl:order-2">
               <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                Musharof Chowdhury
+                {profile.fullName || profile.email || "Admin User"}
               </h4>
               <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Team Manager
+                  {profile.jobTitle || "Administrator"}
                 </p>
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Arizona, United States
+                  {location || "Chưa cập nhật địa chỉ"}
                 </p>
               </div>
             </div>
             <div className="flex items-center order-2 gap-2 grow xl:order-3 xl:justify-end">
               <a        
         target="_blank"
-        rel="noreferrer" href='https://www.facebook.com/PimjoHQ' className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+        rel="noreferrer" href={profile.facebookUrl || "#"} className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
                   width="20"
@@ -61,8 +114,8 @@ export default function UserMetaCard() {
                 </svg>
               </a>
 
-              <a href='https://x.com/PimjoHQ' target="_blank"
-        rel="noreferrer"  className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+              <a href={profile.xUrl || "#"} target="_blank"
+        rel="noreferrer"  className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
                   width="20"
@@ -78,8 +131,8 @@ export default function UserMetaCard() {
                 </svg>
               </a>
 
-              <a href="https://www.linkedin.com/company/pimjo" target="_blank"
-        rel="noreferrer" className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+              <a href={profile.linkedinUrl || "#"} target="_blank"
+        rel="noreferrer" className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
                   width="20"
@@ -95,8 +148,8 @@ export default function UserMetaCard() {
                 </svg>
               </a>
 
-              <a href='https://instagram.com/PimjoHQ' target="_blank"
-        rel="noreferrer" className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+              <a href={profile.instagramUrl || "#"} target="_blank"
+        rel="noreferrer" className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
                   width="20"
@@ -114,8 +167,8 @@ export default function UserMetaCard() {
             </div>
           </div>
           <button
-            onClick={openModal}
-            className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto"
+            onClick={handleOpenModal}
+            className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200 lg:inline-flex lg:w-auto"
           >
             <svg
               className="fill-current"
@@ -146,8 +199,37 @@ export default function UserMetaCard() {
               Update your details to keep your profile up-to-date.
             </p>
           </div>
-          <form className="flex flex-col">
+          <form ref={formRef} className="flex flex-col" onSubmit={handleSubmit}>
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+              <div>
+                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+                  Profile Photo
+                </h5>
+
+                <div className="mb-7 flex items-center gap-5">
+                  <div className="relative h-20 w-20 overflow-hidden rounded-full border border-gray-200 dark:border-gray-800">
+                    <Image
+                      fill
+                      src={modalAvatarPreview || profile.avatarUrl || "/images/user/owner.jpg"}
+                      alt="Avatar preview"
+                      unoptimized
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <Label htmlFor="avatar">Upload new photo</Label>
+                    <FileInput
+                      id="avatar"
+                      name="avatar"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleAvatarChange}
+                    />
+                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      JPG, PNG hoặc WEBP. Tối đa 5MB.
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div>
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   Social Links
@@ -157,29 +239,35 @@ export default function UserMetaCard() {
                   <div>
                     <Label>Facebook</Label>
                     <Input
+                      id="facebook_url"
+                      name="facebook_url"
                       type="text"
-                      defaultValue="https://www.facebook.com/PimjoHQ"
+                      defaultValue={profile.facebookUrl}
                     />
                   </div>
 
                   <div>
                     <Label>X.com</Label>
-                    <Input type="text" defaultValue="https://x.com/PimjoHQ" />
+                    <Input id="x_url" name="x_url" type="text" defaultValue={profile.xUrl} />
                   </div>
 
                   <div>
                     <Label>Linkedin</Label>
                     <Input
+                      id="linkedin_url"
+                      name="linkedin_url"
                       type="text"
-                      defaultValue="https://www.linkedin.com/company/pimjo"
+                      defaultValue={profile.linkedinUrl}
                     />
                   </div>
 
                   <div>
                     <Label>Instagram</Label>
                     <Input
+                      id="instagram_url"
+                      name="instagram_url"
                       type="text"
-                      defaultValue="https://instagram.com/PimjoHQ"
+                      defaultValue={profile.instagramUrl}
                     />
                   </div>
                 </div>
@@ -192,37 +280,40 @@ export default function UserMetaCard() {
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
                     <Label>First Name</Label>
-                    <Input type="text" defaultValue="Musharof" />
+                    <Input id="first_name" name="first_name" type="text" defaultValue={profile.firstName} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Last Name</Label>
-                    <Input type="text" defaultValue="Chowdhury" />
+                    <Input id="last_name" name="last_name" type="text" defaultValue={profile.lastName} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Email Address</Label>
-                    <Input type="text" defaultValue="randomuser@pimjo.com" />
+                    <Input type="email" defaultValue={profile.email} disabled />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Phone</Label>
-                    <Input type="text" defaultValue="+09 363 398 46" />
+                    <Input id="phone" name="phone" type="text" defaultValue={profile.phone} />
                   </div>
 
                   <div className="col-span-2">
                     <Label>Bio</Label>
-                    <Input type="text" defaultValue="Team Manager" />
+                    <Input id="bio" name="bio" type="text" defaultValue={profile.bio} />
                   </div>
                 </div>
               </div>
             </div>
+            {error && (
+              <p className="mt-4 px-2 text-sm text-error-500">{error}</p>
+            )}
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <Button size="sm" variant="outline" onClick={closeModal}>
+              <Button size="sm" variant="outline" onClick={closeModal} disabled={isPending}>
                 Close
               </Button>
-              <Button size="sm" onClick={handleSave}>
-                Save Changes
+              <Button size="sm" type="submit" disabled={isPending}>
+                {isPending ? "Saving..." : "Save Changes"}
               </Button>
             </div>
           </form>
